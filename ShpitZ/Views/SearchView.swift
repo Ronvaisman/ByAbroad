@@ -278,66 +278,7 @@ struct SearchView: View {
     }
 }
 
-// MARK: - Product Row View
-struct ProductRowView: View {
-    let product: Product
-    
-    var body: some View {
-        HStack {
-            AsyncImage(url: URL(string: product.imageURL ?? "")) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-            } placeholder: {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.gray.opacity(0.3))
-                    .overlay(
-                        Image(systemName: "photo")
-                            .foregroundColor(.gray)
-                    )
-            }
-            .frame(width: 60, height: 60)
-            .cornerRadius(8)
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(product.name)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .lineLimit(2)
-                
-                Text(product.storeName)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                
-                HStack {
-                    Text("$\(product.price, specifier: "%.2f")")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.primary)
-                    
-                    Text(product.currency)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            }
-            
-            Spacer()
-            
-            Button(action: {
-                // Calculate cost
-            }) {
-                Text("Calculate")
-                    .font(.caption)
-                    .foregroundColor(.blue)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.blue.opacity(0.1))
-                    .cornerRadius(8)
-            }
-        }
-        .padding(.vertical, 4)
-    }
-}
+// Note: ProductRowView is now defined in HomeView.swift since we moved to inline search
 
 #Preview {
     SearchView(searchText: .constant(""))
