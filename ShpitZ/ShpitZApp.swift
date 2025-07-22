@@ -12,7 +12,10 @@ import SwiftData
 struct ShpitZApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Product.self,
+            Store.self,
+            CostCalculation.self,
+            ShippingForwarder.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
