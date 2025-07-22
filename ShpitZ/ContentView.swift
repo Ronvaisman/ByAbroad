@@ -13,6 +13,10 @@ struct ContentView: View {
 
     var body: some View {
         HomeView()
+            .onAppear {
+                // Print API configuration status on app startup (development only)
+                APIConfiguration.printConfigurationStatus()
+            }
     }
 }
 
