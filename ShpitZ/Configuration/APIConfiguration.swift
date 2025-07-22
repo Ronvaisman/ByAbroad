@@ -12,17 +12,17 @@ import Foundation
 /// Never hardcode API keys in source code!
 struct APIConfiguration {
     
-    // MARK: - SerpApi (Multi-Platform Search)
-    struct SerpApi {
-        /// API Key for SerpApi - supports Google Shopping, Amazon, eBay, Walmart, etc.
+    // MARK: - SearchAPI (Multi-Platform Search)
+    struct SearchAPI {
+        /// API Key for SearchAPI - supports Google Shopping, Amazon, eBay, Walmart, etc.
         static var apiKey: String {
-            return ProcessInfo.processInfo.environment["SERPAPI_API_KEY"] ??
-                   Bundle.main.object(forInfoDictionaryKey: "SERPAPI_API_KEY") as? String ??
-                   "" // Empty for development
+            return ProcessInfo.processInfo.environment["SEARCHAPI_API_KEY"] ??
+                   Bundle.main.object(forInfoDictionaryKey: "SEARCHAPI_API_KEY") as? String ??
+                   "D95gBzkEVRjsSscmNfqb8mQq" // Development key - replace with env var in production
         }
         
-        /// SerpApi base URL
-        static var baseURL: String { return "https://serpapi.com/search" }
+        /// SearchAPI base URL
+        static var baseURL: String { return "https://www.searchapi.io/api/v1/search" }
         
         /// Supported search engines
         enum Engine: String, CaseIterable {
@@ -92,7 +92,7 @@ struct APIConfiguration {
     static func printConfigurationStatus() {
         #if DEBUG
         print("=== API Configuration Status ===")
-        print("📦 SerpApi: \(SerpApi.isConfigured ? "✅ Configured" : "❌ Missing API Key")")
+        print("🔍 SearchAPI: \(SearchAPI.isConfigured ? "✅ Configured" : "❌ Missing API Key")")
         print("🌧️ Rainforest API: \(RainforestAPI.isConfigured ? "✅ Configured" : "❌ Missing API Key")")
         print("💱 Exchange Rate API: \(ExchangeRate.isConfigured ? "✅ Configured" : "❌ Missing API Key")")
         print("===============================")
@@ -101,13 +101,13 @@ struct APIConfiguration {
     
     /// Check if any API is configured
     static var hasAnyAPIConfigured: Bool {
-        return SerpApi.isConfigured || RainforestAPI.isConfigured
+        return SearchAPI.isConfigured || RainforestAPI.isConfigured
     }
     
     /// Get configuration summary for debugging
     static var configurationSummary: [String: Bool] {
         return [
-            "SerpApi": SerpApi.isConfigured,
+            "SearchAPI": SearchAPI.isConfigured,
             "RainforestAPI": RainforestAPI.isConfigured,
             "ExchangeRate": ExchangeRate.isConfigured
         ]

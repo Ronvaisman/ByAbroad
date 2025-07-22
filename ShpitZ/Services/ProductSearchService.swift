@@ -22,6 +22,7 @@ class ProductSearchService: ObservableObject {
     
     static let shared = ProductSearchService()
     private let networkManager = NetworkManager.shared
+    private let searchAPIService = SearchAPIService.shared
     
     @Published var isSearching = false
     @Published var lastSearchResults: SearchResult?
@@ -42,11 +43,30 @@ class ProductSearchService: ObservableObject {
         
         var allProducts: [Product] = []
         
-        // For now, we'll use mock data since we don't have API keys yet
-        // This will be replaced with actual API calls when credentials are obtained
-        
-        let mockProducts = await generateMockSearchResults(query: query, category: category)
-        allProducts.append(contentsOf: mockProducts)
+        // 🔥 NEW: Use real SearchAPI instead of mock data!
+        do {
+            // Search Google Shopping first (most comprehensive)
+            let googleShoppingProducts = try await searchAPIService.searchGoogleShopping(query: query)
+            allProducts.append(contentsOf: googleShoppingProducts)
+            
+            // If we have few results, also search Amazon
+            if googleShoppingProducts.count < 5 {
+                let amazonProducts = try await searchAPIService.searchAmazon(query: query)
+                allProducts.append(contentsOf: amazonProducts)
+            }
+            
+            // If still few results, search eBay
+            if allProducts.count < 8 {
+                let ebayProducts = try await searchAPIService.searchEbay(query: query)
+                allProducts.append(contentsOf: ebayProducts)
+            }
+            
+        } catch {
+            print("⚠️ SearchAPI error: \(error.localizedDescription)")
+            // Fallback to mock data if API fails
+            let mockProducts = await generateMockSearchResults(query: query, category: category)
+            allProducts.append(contentsOf: mockProducts)
+        }
         
         let result = SearchResult(
             products: allProducts,
